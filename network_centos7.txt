@@ -1,0 +1,200 @@
+centos 7的防火墙命令
+
+1、开启端口
+
+firewall-cmd --zone=public --add-port=80/tcp --permanent
+
+命令含义：
+
+--zone #作用域
+
+--add-port=80/tcp  #添加端口，格式为：端口/通讯协议
+
+--permanent  #永久生效，没有此参数重启后失效
+
+# 例如开放8081端口
+# firewall-cmd --zone=public --add-port=8081/tcp --permanent
+
+2、重启防火墙
+
+firewall-cmd --reload
+
+3、查看已经开放的端口
+
+firewall-cmd --list-ports
+
+4、停止firewall
+
+systemctl stop firewalld.service 
+
+5、禁止firewall开机启动
+
+systemctl disable firewalld.service
+
+
+---------------------------------------------------------------------------------------------------
+
+centos 7版本以下的防火墙命令
+
+1、开放端口
+
+/sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+
+2、保存
+/etc/rc.d/init.d/iptables save
+
+3、查看打开的端口
+
+/etc/init.d/iptables status
+
+4、永久性生效，重启后不会复原
+
+开启： chkconfig iptables on
+
+关闭： chkconfig iptables off
+
+5、即时生效，重启后复原
+
+开启： service iptables start
+
+关闭： service iptables stop
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
+
+vim /etc/sysconfig/network-scripts/ifcfg-eth0 
+
+10.24.234.254
+
+10.43.1.1
+
+
+echo "10.24.234.97 centos-master
+10.24.234.101 centos-node-1
+10.24.234.98 centos-node-2" >> /etc/hosts
+
+date -s  11/20/2017
+
+
+TYPE=Ethernet
+BOOTPROTO=static
+DEFROUTE=yes
+PEERDNS=yes
+PEERROUTES=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_PEERDNS=yes
+IPV6_PEERROUTES=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=ens33
+UUID=b54a0533-7f14-497e-8d3b-0689a91b4220
+DEVICE=ens33
+ONBOOT=yes
+IPADDR=10.24.234.100
+NETMASK=255.255.255.0
+GATEWAY=10.24.234.254
+DNS1=10.43.1.1
+----------------------------------------------------------------
+
+vi /etc/yum.repos.d/virt7-docker-common-release.repo
+
+[virt7-docker-common-release]
+name=virt7-docker-common-release
+baseurl=http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/
+gpgcheck=0
+
+yum -y install --enablerepo=virt7-docker-common-release kubernetes etcd flannel
+
+echo "10.24.234.100 centos-master
+10.24.234.102 centos-minion-1" >> /etc/hosts
+
+
+vi /etc/kubernetes/config
+
+# logging to stderr means we get it in the systemd journal
+KUBE_LOGTOSTDERR="--logtostderr=true"
+
+# journal message level, 0 is debug
+KUBE_LOG_LEVEL="--v=0"
+
+# Should this cluster be allowed to run privileged docker containers
+KUBE_ALLOW_PRIV="--allow-privileged=false"
+
+# How the replication controller and scheduler find the kube-apiserver
+KUBE_MASTER="--master=http://centos-master:8080"
+
+vi /etc/sysconfig/selinux 
+
+SELINUX=disabled
+
+setenforce 0
+systemctl disable  firewalld
+systemctl stop  firewalld
+
+--------------------------master--------------------------------------
+
+vi /etc/etcd/etcd.conf
+
+# [member]
+ETCD_NAME=default
+ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
+ETCD_LISTEN_CLIENT_URLS="http://0.0.0.0:2379"
+
+#[cluster]
+ETCD_ADVERTISE_CLIENT_URLS="http://0.0.0.0:2379"
+
+vi /etc/kubernetes/apiserver
+
+# The address on the local server to listen to.
+KUBE_API_ADDRESS="--address=0.0.0.0"
+
+# The port on the local server to listen on.
+KUBE_API_PORT="--port=8080"
+
+# Port kubelets listen on
+KUBELET_PORT="--kubelet-port=10250"
+
+# Comma separated list of nodes in the etcd cluster
+KUBE_ETCD_SERVERS="--etcd-servers=http://centos-master:2379"
+
+# Address range to use for services
+KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range=10.254.0.0/16"
+
+# Add your own!
+KUBE_API_ARGS=""
+
+
+systemctl start etcd
+etcdctl mkdir /kube-centos/network
+etcdctl mk /kube-centos/network/config "{ \"Network\": \"172.30.0.0/16\", \"SubnetLen\": 24, \"Backend\": { \"Type\": \"vxlan\" } }"
+
+vi /etc/sysconfig/flanneld
+
+# Flanneld configuration options
+
+# etcd url location.  Point this to the server where etcd runs
+FLANNEL_ETCD_ENDPOINTS="http://centos-master:2379"
+
+# etcd config key.  This is the configuration key that flannel queries
+# For address range assignment
+FLANNEL_ETCD_PREFIX="/kube-centos/network"
+
+# Any additional options that you want to pass
+#FLANNEL_OPTIONS=""
+
+set password for 'root'@'localhost' =password('root');
+
+grant all privileges on *.* to root@'%'identified by 'root';
+
+

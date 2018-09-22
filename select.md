@@ -1,0 +1,5 @@
+Select
+
+每个case中的表达式都会被求值。然后再查看那个channel能够发送消息或者可以接收消息，除了default的情况下，选择case就绪的那个来执行，如果多个case同时就绪时，select会随机地选择一个执行，这样来保证每一个channel都有平等的被select的机会。
+
+对一个nil的channel发送和接收操作都会永远阻塞，但在select语句中操作nil的channel永远都不会被select到。因为select的原则就是除了default,要么你可以发送消息，要么你可以接收消息，我才会选中你，如果是阻塞的，我压根不会理会你。
