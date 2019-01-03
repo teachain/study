@@ -9,3 +9,8 @@ https://github.com/gin-gonic/gin
 httprouter框架
 
 https://github.com/julienschmidt/httprouter
+
+机器学习库
+
+https://github.com/gorgonia/gorgonia
+
