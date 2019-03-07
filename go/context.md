@@ -27,3 +27,22 @@ Value()，返回值。
 在context包内部已经为我们实现好了两个空的Context，可以通过调用Background()和TODO()方法获取。一般的将它们作为Context的根，往下派生。
 
 上下文，自然就包括上文和下文，上文传递给下文
+
+
+
+当使用
+
+```
+for {
+    select {
+        case <-ctx.done():
+        //todo
+    }
+}
+```
+
+时，当调用ctx相关的cancel函数时，都能得到通知，也就是使用close(chan)的特性，也就是说都能得到返回。
+
+cancel可以调用多次，但是也就是第一次调用有效，后面的调用没有什么作用，但也没有什么副作用。
+
+文档原文：A CancelFunc tells an operation to abandon its work. A CancelFunc does not wait for the work to stop. After the first call, subsequent calls to a CancelFunc do nothing.

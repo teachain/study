@@ -265,3 +265,102 @@ git tag -d v0.9
 ```
 git push origin :refs/tags/v0.9
 ```
+
+把远程分支拉到本地
+
+git fetch origin dev（dev为远程仓库的分支名）
+
+工作区文件误删，恢复的方法
+
+```
+git reset HEAD   误删文件或文件夹路径 （它的路径可以通过git status来查看）
+
+git checkout     误删文件或文件夹路径
+```
+
+
+
+
+
+**1、先将本地修改存储起来**
+
+```
+git stash
+```
+
+2、用git stash list可以看到保存的信息
+
+```
+git stash list
+```
+
+3、暂存了本地修改之后，就可以pull了
+
+```
+git pull
+```
+
+**4、还原暂存的内容**
+
+```
+git stash pop stash@{0}
+```
+
+
+
+#### 标签
+
+tagname为标签名
+
+1、打一个新标签，当然先切换到你需要打标签的分支上
+
+```
+#master是你要打标签的分支
+git checkout master 
+
+#tagname就是你的标签名，其实它是git tag tagname commitid 的简写，
+#因为它使用了默认最新的commitid
+git tag tagname 
+```
+
+还可以创建带有说明的标签，用`-a`指定标签名，`-m`指定说明文字
+
+```
+git tag -a V0.1 -m "version 0.1 released" 1186b5e
+```
+
+2、使用git tag 可以查看现有的标签
+
+```
+git tag
+```
+
+3、查看标签
+
+```
+git show tagname
+```
+
+4、删除本地仓库中的标签（用git一定要时刻保有本地和远端的概念）
+
+```
+git tag -d  tagname
+```
+
+5、推送tag到远端仓库
+
+```
+git push origin tagname
+```
+
+6、删除远程标签
+
+```
+#要分两步，先删除本地，在删除远端
+#删除本地
+git tag -d tagname
+#删除远端
+git push origin :refs/tags/tagname
+
+```
+
