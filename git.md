@@ -1,11 +1,52 @@
+
+
+## 配置user的信息
+
+```
+git config --global user.name ‘teachain’ #配置用户名
+git config --global user.email ’281477138@qq.com‘ #配置邮箱
+```
+
+三种作用域
+
+```
+--global #对当前用户所有仓库有效
+--local  #只对某个仓库有效，缺省等同于local，在某个仓库中才能使用。
+--system #对系统所有登录的用户有效，基本不用这个选项。
 ```
 
 
-git add .   // 添加文件到版本库（只是添加到缓存区），.代表添加文件夹下所有文件 
 
-git add filename //添加文件到版本库
+### 1、已有项目，但尚未使用git管理
 
-git commit -m "first commit" // 把添加的文件提交到版本库，并填写提交备注
+在这种情况下，我们只要cd到对应的根目录下，然后执行以下命令即可：
+
+```
+git init
+```
+
+### 2、还没有项目，新建项目
+
+```
+git init  project_name #这样他会在当前目录下新建一个文件夹project_name,在该文件夹中创建.git目录。
+```
+
+### 3、从远端clone
+
+```
+git clone url
+```
+
+
+
+常用命令
+
+```
+git add .   #添加文件到暂存区，.代表添加文件夹下所有目录和文件 
+
+git add filename #添加文件filename到暂存区
+
+git commit -m "first commit" #把暂存区中的文件提交到版本库，并填写提交备注
 
 git remote add origin 你的远程库地址  // 把本地库与远程库关联
 
@@ -34,27 +75,9 @@ git log  #查看提交日志
 git reflog
 
 git reset HEAD <file>  #可以把暂存区的修改撤销掉（unstage），重新放回工作区
-
-
-
 ```
 
 
-
-## 配置user的信息
-
-```
-git config --global user.name ‘teachain’ #配置用户名
-git config --global user.email ’281477138@qq.com‘ #配置邮箱
-```
-
-三种作用域
-
-```
---global #对当前用户所有仓库有效
---local  #只对某个仓库有效，缺省等同于local
---system #对系统所有登录的用户有效，基本不用这个选项。
-```
 
 
 
