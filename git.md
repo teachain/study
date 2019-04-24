@@ -380,10 +380,19 @@ git branch -av
 git merge origin/master # origin/master为远端分支
 ```
 
-2、修改的是同一个文件
+2、修改的是同一个文件，修改的是不同区域，没有冲突。
 
 ```
 git fetch
 git merge origin/master # origin/master为远端分支(或者用commitid)
+```
+
+3、修改的是同一个文件，修改的是同一个区域，产生冲突了
+
+```
+git pull #先把远端的拉取下来并试着merge，这句执行完以后，如果有冲突，他会告诉你哪里冲突了。
+#接着我们对冲突的文件进行编辑，这是跟svn一样的，这种冲突是git无法自动merge的，#我们必须手动进行编辑完成合并。
+git commit #编辑完成之后，确认没有问题了，我们生成新的commit
+git push  #及时把commit 提交上去。
 ```
 
