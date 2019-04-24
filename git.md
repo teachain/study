@@ -364,3 +364,26 @@ git push origin :refs/tags/tagname
 
 ```
 
+查看所有的分支
+
+```
+git branch -av
+```
+
+
+
+1、修改的是不同的文件
+
+目前的情况是远端有一个新的commit,而本地有一个commit,但尚未push到远端，这个时候，我们的处理方法是：
+
+```
+git merge origin/master # origin/master为远端分支
+```
+
+2、修改的是同一个文件
+
+```
+git fetch
+git merge origin/master # origin/master为远端分支(或者用commitid)
+```
+
