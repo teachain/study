@@ -41,6 +41,33 @@ git reset HEAD <file>  #可以把暂存区的修改撤销掉（unstage），重�
 
 
 
+## 配置user的信息
+
+```
+git config --global user.name ‘teachain’ #配置用户名
+git config --global user.email ’281477138@qq.com‘ #配置邮箱
+```
+
+三种作用域
+
+```
+--global #对当前用户所有仓库有效
+--local  #只对某个仓库有效，缺省等同于local
+--system #对系统所有登录的用户有效，基本不用这个选项。
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 创建目录，并进入目录
 
 ```
@@ -396,3 +423,22 @@ git commit #编辑完成之后，确认没有问题了，我们生成新的commi
 git push  #及时把commit 提交上去。
 ```
 
+4、修改了文件名,另一用户修改了文件内容
+
+```
+git pull #自动拉取，并试着merge,不得不说git还是相当智能的。
+git push #及时把commit 提交上去。
+```
+
+5、多个用户对同一个文件进行变更文件名
+
+```
+git mv index.html index.htm #修改文件名
+git pull #还是先试着拉下来，并试着merge
+#这个时候，git说冲突了，你们自己解决吧
+#那我们就按照平常的解决方案解决。(该怎么解决就怎么解决)
+git commit -m "解决之后，提交"
+git push #及时把commit 提交上去。
+```
+
+6、禁用git push -f  ,团队合作这个命令一定要禁用，不然大家会打架的，会流血的。
