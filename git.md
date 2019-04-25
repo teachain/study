@@ -39,12 +39,24 @@ git clone url
 
 
 
+工作目录==add===>暂存区==commit===>版本历史===push==>远端仓库
+
 常用命令
 
 ```
 git add .   #添加文件到暂存区，.代表添加文件夹下所有目录和文件 
 
-git add filename #添加文件filename到暂存区
+git add -u  #将已经纳入git管理的修改的文件和文件夹添加到暂存区
+
+git add filename #添加文件filename到暂存区，可写多个文件和文件夹，空格隔开
+
+git rm  filename #删除文件
+
+git mv  filename newname #文件改名，也可以是文件夹
+#--all  --graph
+git log  -n4 --oneline #查看版本历史,显示最新的4条，每个commit一行。
+
+git help --web log #查看log命令的帮助文档
 
 git commit -m "first commit" #把暂存区中的文件提交到版本库，并填写提交备注
 
