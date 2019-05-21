@@ -1,11 +1,64 @@
+
+
+## 配置user的信息
+
+```
+git config --global user.name ‘teachain’ #配置用户名
+git config --global user.email ’281477138@qq.com‘ #配置邮箱
+```
+
+三种作用域
+
+```
+--global #对当前用户所有仓库有效
+--local  #只对某个仓库有效，缺省等同于local，在某个仓库中才能使用。
+--system #对系统所有登录的用户有效，基本不用这个选项。
 ```
 
 
-git add .   // 添加文件到版本库（只是添加到缓存区），.代表添加文件夹下所有文件 
 
-git add filename //添加文件到版本库
+### 1、已有项目，但尚未使用git管理
 
-git commit -m "first commit" // 把添加的文件提交到版本库，并填写提交备注
+在这种情况下，我们只要cd到对应的根目录下，然后执行以下命令即可：
+
+```
+git init
+```
+
+### 2、还没有项目，新建项目
+
+```
+git init  project_name #这样他会在当前目录下新建一个文件夹project_name,在该文件夹中创建.git目录。
+```
+
+### 3、从远端clone
+
+```
+git clone url
+```
+
+
+
+工作目录==add===>暂存区==commit===>版本历史===push==>远端仓库
+
+常用命令
+
+```
+git add .   #添加文件到暂存区，.代表添加文件夹下所有目录和文件 
+
+git add -u  #将已经纳入git管理的修改的文件和文件夹添加到暂存区
+
+git add filename #添加文件filename到暂存区，可写多个文件和文件夹，空格隔开
+
+git rm  filename #删除文件
+
+git mv  filename newname #文件改名，也可以是文件夹
+#--all  --graph
+git log  -n4 --oneline #查看版本历史,显示最新的4条，每个commit一行。
+
+git help --web log #查看log命令的帮助文档
+
+git commit -m "first commit" #把暂存区中的文件提交到版本库，并填写提交备注
 
 git remote add origin 你的远程库地址  // 把本地库与远程库关联
 
@@ -34,10 +87,19 @@ git log  #查看提交日志
 git reflog
 
 git reset HEAD <file>  #可以把暂存区的修改撤销掉（unstage），重新放回工作区
-
-
-
 ```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -388,3 +450,54 @@ git fetch --unshallow
 git clone git@github.com:vaibhavjain2/xxx.git 
 ```
 
+查看所有的分支
+
+```
+git branch -av
+```
+
+
+
+1、修改的是不同的文件
+
+目前的情况是远端有一个新的commit,而本地有一个commit,但尚未push到远端，这个时候，我们的处理方法是：
+
+```
+git merge origin/master # origin/master为远端分支
+```
+
+2、修改的是同一个文件，修改的是不同区域，没有冲突。
+
+```
+git fetch
+git merge origin/master # origin/master为远端分支(或者用commitid)
+```
+
+3、修改的是同一个文件，修改的是同一个区域，产生冲突了
+
+```
+git pull #先把远端的拉取下来并试着merge，这句执行完以后，如果有冲突，他会告诉你哪里冲突了。
+#接着我们对冲突的文件进行编辑，这是跟svn一样的，这种冲突是git无法自动merge的，#我们必须手动进行编辑完成合并。
+git commit #编辑完成之后，确认没有问题了，我们生成新的commit
+git push  #及时把commit 提交上去。
+```
+
+4、修改了文件名,另一用户修改了文件内容
+
+```
+git pull #自动拉取，并试着merge,不得不说git还是相当智能的。
+git push #及时把commit 提交上去。
+```
+
+5、多个用户对同一个文件进行变更文件名
+
+```
+git mv index.html index.htm #修改文件名
+git pull #还是先试着拉下来，并试着merge
+#这个时候，git说冲突了，你们自己解决吧
+#那我们就按照平常的解决方案解决。(该怎么解决就怎么解决)
+git commit -m "解决之后，提交"
+git push #及时把commit 提交上去。
+```
+
+6、禁用git push -f  ,团队合作这个命令一定要禁用，不然大家会打架的，会流血的。
