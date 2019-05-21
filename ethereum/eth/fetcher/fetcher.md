@@ -131,6 +131,7 @@ type Fetcher struct {
 	quit chan struct{}
 
 	// Announce states
+	//记录节点的区块哈希的次数
 	announces  map[string]int              // Per peer announce counts to prevent memory exhaustion
 	announced  map[common.Hash][]*announce // Announced blocks, scheduled for fetching
 	fetching   map[common.Hash]*announce   // Announced blocks, currently fetching
@@ -141,7 +142,14 @@ type Fetcher struct {
 	// Block cache
 	//收到的区块队列（通过网络过来的）
 	queue  *prque.Prque            // Queue containing the import operations (block number sorted)
+
+	//记录节点的区块的次数
+	//当收到一个区块哈希的时候，如果它不是dos攻击的话，我们将它的数值增加1
+	//当处理完一个哈希的时候，它的数值减去1
 	queues map[string]int          // Per peer block counts to prevent memory exhaustion
+
+	//用来保证queue中元素的唯一性
+	//也就是说先判断是否在queued，不在，则加入并进行queue的push操作
 	queued map[common.Hash]*inject // Set of already queued blocks (to dedupe imports)
 
 	// Callbacks
@@ -711,34 +719,50 @@ func (f *Fetcher) enqueue(peer string, block *types.Block) {
 	}
 }
 
+//在err为nil的情况下，我们会向一部分已连接节点广播整个区块，向剩下的一部分已连接节点广播区块的哈希
 // insert spawns a new goroutine to run a block insertion into the chain. If the
 // block's number is at the same height as the current import phase, it updates
 // the phase states accordingly.
 func (f *Fetcher) insert(peer string, block *types.Block) {
+
+	//区块的哈希
 	hash := block.Hash()
 
 	// Run the import on a new thread
 	log.Debug("Importing propagated block", "peer", peer, "number", block.Number(), "hash", hash)
+
 	go func() {
+
+		//处理完该区块以后，告诉fetcher,已经处理完毕
 		defer func() { f.done <- hash }()
 
+		//找到该区块的父区块
 		// If the parent's unknown, abort insertion
 		parent := f.getBlock(block.ParentHash())
+
+		//如果父区块不存在，那么我们就直接返回了
 		if parent == nil {
+
 			log.Debug("Unknown parent of propagated block", "peer", peer, "number", block.Number(), "hash", hash, "parent", block.ParentHash())
+
 			return
 		}
+		//就是说想要进入到这里，该区块在本地数据库中必须存在父区块
 		// Quickly validate the header and propagate the block if it passes
+		//这里我们接着校验区块头
 		switch err := f.verifyHeader(block.Header()); err {
 		case nil:
+			//顺利通过校验，我们给我们一部分的邻居节点广播整个区块
 			// All ok, quickly propagate to our peers
 			propBroadcastOutTimer.UpdateSince(block.ReceivedAt)
+		    //广播区块
 			go f.broadcastBlock(block, true)
 
 		case consensus.ErrFutureBlock:
 			// Weird future block, don't fail, but neither propagate
-
+            //如果是一个未来块，我们不广播整个区块，但下面我们会广播该区块的哈希
 		default:
+			//也许出现了我们意想不到的错误
 			// Something went very wrong, drop the peer
 			log.Debug("Propagated block verification failed", "peer", peer, "number", block.Number(), "hash", hash, "err", err)
 			f.dropPeer(peer)
@@ -753,7 +777,7 @@ func (f *Fetcher) insert(peer string, block *types.Block) {
 		// If import succeeded, broadcast the block
 		propAnnounceOutTimer.UpdateSince(block.ReceivedAt)
 
-		//广播出去，我有新块了
+		//广播区块哈希
 		go f.broadcastBlock(block, false)
 
 		// Invoke the testing hook if needed
@@ -818,4 +842,3 @@ func (f *Fetcher) forgetBlock(hash common.Hash) {
 }
 
 ```
-

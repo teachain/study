@@ -1,0 +1,24 @@
+{
+  "config": {
+    "chainId": 2048,
+    "homesteadBlock": 0,
+    "daoForkBlock": 0,
+    "daoForkSupport": false,
+    "eip150Block": 0,
+    "eip155Block": 0,
+    "eip158Block": 0,
+    "byzantiumBlock": 0,
+    "constantinopleBlock": 0,
+    "petersburgBlock": 0,
+    "ewasmBlock": 9280000
+  },
+  "alloc": {},
+  "coinbase": "0x0000000000000000000000000000000000000000",
+  "difficulty": "0x10",
+  "extraData": "",
+  "gasLimit": "0x222222",
+  "nonce": "0x000000000000001",
+  "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "timestamp": "0x00"
+}

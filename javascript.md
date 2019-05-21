@@ -200,3 +200,28 @@ function f1() {
 jQuery.unsubscribe('done', f2);
 ```
 
+
+
+
+
+### async和await
+
+async函数返回一个 Promise 对象，可以使用then方法添加回调函数。当函数执行的时候，一旦遇到await就会阻塞等待直到异步操作完成，再接着执行函数体内后面的语句。也就是说await后面的函数其实是一个异步操作函数。
+
+`async`函数返回一个 Promise 对象。
+
+`async`函数内部`return`语句返回的值，会成为`then`方法回调函数的参数。
+
+`async`函数返回的 Promise 对象，必须等到内部所有`await`命令后面的 Promise 对象执行完，才会发生状态改变，除非遇到`return`语句或者抛出错误。也就是说，只有`async`函数内部的异步操作执行完，才会执行`then`方法指定的回调函数。
+
+### await 命令
+
+正常情况下，`await`命令后面是一个 Promise 对象，返回该对象的结果。如果不是 Promise 对象，就直接返回对应的值。
+
+`await`命令后面的 Promise 对象如果变为`reject`状态，则`reject`的参数会被`catch`方法的回调函数接收到。
+
+任何一个`await`语句后面的 Promise 对象变为`reject`状态，那么整个`async`函数都会中断执行。
+
+`await`命令只能用在`async`函数之中
+
+如果确实希望多个请求并发执行，可以使用`Promise.all`方法

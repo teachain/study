@@ -362,5 +362,29 @@ git tag -d tagname
 #删除远端
 git push origin :refs/tags/tagname
 
+
+```
+
+
+
+
+
+```
+出现以下错误时：
+
+error: RPC failed; curl 18 transfer closed with outstanding read data remaining 
+fatal: The remote end hung up unexpectedly 
+fatal: early EOF 
+fatal: index-pack failed
+
+可以使用以下命令来解决：
+git config --global http.postBuffer 2147483648 #2GB
+git config --global core.compression 0
+git clone --depth 1 https://github.com/kubernetes/kubernetes.git
+cd kubernetes
+git fetch --unshallow
+
+换成ssh方式
+git clone git@github.com:vaibhavjain2/xxx.git 
 ```
 
