@@ -1,5 +1,36 @@
 ## vue基础
 
+***所有的 Vue 组件都是 Vue 实例，并且接受相同的选项对象 (一些根实例特有的选项除外)。***
+
+***只有当实例被创建时 `data` 中存在的属性才是响应式的。唯一的例外是使用 `Object.freeze()`，这会阻止修改现有的属性，也意味着响应系统无法再*追踪*变化。***例如：
+
+```
+var obj = {
+  foo: 'bar'
+}
+
+Object.freeze(obj)
+
+new Vue({
+  el: '#app',
+  data: obj
+})
+
+<div id="app">
+  <p>{{ foo }}</p>
+  <!-- 这里的 `foo` 不会更新！ -->
+  <button v-on:click="foo = 'baz'">Change it</button>
+</div>
+```
+
+这里的foo的属性将不能同步改变了。
+
+除了数据属性，Vue 实例还暴露了一些有用的实例属性与方法。它们都有前缀 `$`，以便与用户定义的属性区分开来。
+
+https://cn.vuejs.org/v2/guide/instance.html
+
+
+
 “{{}}”是最基本的文本插值方法，它会自动将我们双向绑定的数据实时显示出来。
 
 如果有的时候就是想输出 HTML，而不是将数据解释后的纯文本，可以使用 v-html替代v-model来达到目的。

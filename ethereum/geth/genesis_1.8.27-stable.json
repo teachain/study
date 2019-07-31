@@ -1,0 +1,18 @@
+{
+	"config": {
+		"chainId": 1014,
+		"homesteadBlock": 0,
+		"daoForkBlock": 0,
+		"daoForkSupport": false,
+		"eip150Block": 0,
+		"eip155Block": 0,
+		"eip158Block": 0,
+		"byzantiumBlock": 0,
+		"constantinopleBlock": 0,
+		"petersburgBlock": 0,
+		"ethash": {}
+	},
+	"difficulty": "8000",
+	"gasLimit": "18000000000",
+	"alloc": {}
+}

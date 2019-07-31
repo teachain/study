@@ -47,3 +47,17 @@ https://www.douban.com/note/638225289/
 # [如何关闭Golang中的HTTP连接 How to Close Golang's HTTP connection](https://www.cnblogs.com/cobbliu/p/4517598.html)
 
 https://www.cnblogs.com/cobbliu/p/4517598.html
+
+https://www.alexedwards.net/blog/disable-http-fileserver-directory-listings
+
+
+
+https://www.alexedwards.net/blog/
+
+
+
+```
+github.com/goji/httpauth
+
+https://github.com/gorilla/handlers
+```

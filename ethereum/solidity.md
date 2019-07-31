@@ -1,3 +1,15 @@
+安装solidity编译器
+
+brew unlink solidity
+
+brew install https://raw.githubusercontent.com/ethereum/homebrew-ethereum/{commit}/solidity.rb
+
+而commit则从这里获取
+
+https://github.com/ethereum/homebrew-ethereum/commits/master/solidity.rb
+
+
+
 对合约的状态变量使用public修饰的话，会自动生成一个针对该状态变量的一个get函数（与状态变量同名的一个函数---------编译器帮你实现的）。
 
 mapping (address => uint) public balances   
