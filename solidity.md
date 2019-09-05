@@ -54,3 +54,31 @@ decoded output是合约调用的函数返回数据。
 # 整数
 
 整数所占位数可以指定从`uint8/int8`到`uint256/int256`，以8为步长单位递增的不同长度。`uint`和`int`默认表示`uint256`和`int256`。
+
+
+
+#### 状态常量
+
+```
+pragma solidity ^0.4.0;
+
+contract C {
+    uint constant x = 32**22 + 8;
+    string constant text = "abc";
+    bytes32 constant myHash = keccak256("abc");
+}
+```
+
+也就是使用constant关键字修饰。***不是所有的类型都支持常量，当前支持的仅有值类型和字符串。***
+
+
+
+#### fallback函数
+
+```
+ function ()  external payable {
+    
+ }
+```
+
+它的特点是，没有名字，没有参数，没有返回值。当调用一个合约中不存在的函数时，会调用该函数。
