@@ -5,6 +5,7 @@ var web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 //方法一
 //调用获取账号地址接口
 //新版本metamask必须以异步的方式(加回调函数的方式)获取
+console.log(web3.version);
 web3.eth.getAccounts(function(error, result) {
 	if (error) {
 		console.log(error);

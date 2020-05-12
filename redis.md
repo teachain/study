@@ -10,31 +10,31 @@ redis的数据类型操作命令肯定是这样子的
 ###1.String 存入字符类型###
 
  * Set name luowen  #设置name = luowen 存储
- 
+
  * Get name    #获取设置好的name的值
- 
+
  * Setnx name luowen 设置name键值为luowen #如果存在,则返回0 不存在返回1
- 
+
  * Mset name luowen age 23 salary 233333 #设置多个键值对 一块存错 全成功,全失败
- 
+
  * Msetnx name maomao age 23 hoby basketball #如果设置多个键值对中有存在返回失败
- 
+
  * Mget name age salary #获取多个键的值
- 
+
  * Getset name maomao #获取name的旧值,并设置新的值为maomao
 
  * Setrange name 3 maomao #将键name的值从下标3开始进行替换，假设原来name的值是luowen,那么执行该命令之后，name的值就修改为luomaomao了。
- 
+
  * Getrange name 3 6 #获取键name的值,取一个范围下标3~6（3<=index<=6） 
 
  * Append name .com #给键nane追加.com 
 
  * Incr age #设置每个值自增（加1）
- 
+
  * Incrby age 6 给name加上6 如果是负数则减
 
  * Decr 与incr相反
- 
+
  * Decrby 与Incrby相反
 
  * Strlen 返回键对应的值得字符长度
@@ -85,10 +85,10 @@ Lrange list1 0 -1 #把链表中的数据从0到尾全部取出(注意没有rrang
  #得到的结果是
  1) "hello"
  2) "world"
-``` 
+```
 
 2、rpush 从右边压入
- 
+
  ```
  rpush list2  world
  rpush list2  hello
@@ -98,7 +98,7 @@ Lrange list1 0 -1 #把链表中的数据从0到尾全部取出(注意没有rrang
   2) "hello"
  ```
  3、linsert 插入数据
- 
+
  ```
 Rpush list3 luowen
 Rpush list3 maomao
@@ -124,7 +124,7 @@ Lrange list3 0 -1
 	4) "forever"
  ```
  4 lset 给某个元素（针对下标）赋值
- 
+
  ```
  Rpush list5 luowen
  Rpush list5 maomao
@@ -143,7 +143,7 @@ Lrem list6 1 “luowen”# 删除list6 中值为luowen的值 1表示删除的个
 ```
 
  6、ltrim(保留指定下标【一个范围】的元素) ，其余的将从管道中删除。
- 
+
 ```
 Lpush list7 luowen1
 Lpush list7 luowen2
@@ -172,7 +172,7 @@ Lpush list8 luowen3
 rpop list8 #从右边弹出一个元素返回给client,并将元素从管道中删掉。
 ```
 9、rpoplpush 从一个链表右边弹出,在从左边压入到另一个链表
- 
+
  ```      
  Rpoplpush list1 list2 #从list1右边弹出一个元素，然后从list2的左边压入这个元素
  ```
@@ -181,7 +181,7 @@ rpop list8 #从右边弹出一个元素返回给client,并将元素从管道中�
 ```
 lindex list11 0 #返回下标为0的元素
 ```
-        
+
 11、llen 返回这个链表的元素的长度
 
 ```
@@ -374,7 +374,7 @@ zremrangebyscore myzset3 3 6#将score为3~6之间的元素删除
     9 randomkey 随机返回一个键的值
     10 rename 重命名一个键
     11 type key 判断key的数据类型
-
+    
     Server
     1 ping ping我们的主机能否链接 链接是否存活
     2 echo 命令 echo demo直接输出
@@ -425,3 +425,22 @@ zremrangebyscore myzset3 3 6#将score为3~6之间的元素删除
     7 虚拟内存
         方式一:暂时把不使用的数据放到硬盘里面
     　  方式二:可以把数据分割到其他的slave数据服务器中
+
+
+#### 数据的备份
+
+1、Redis **SAVE** 命令用于创建当前数据库的备份
+
+```
+redis 127.0.0.1:6379> SAVE 
+```
+
+该命令将在 redis 安装目录中创建dump.rdb文件。
+
+2、Bgsave
+
+创建 redis 备份文件也可以使用命令 **BGSAVE**，该命令在后台执行。
+
+#### 数据的恢复
+
+如果需要恢复数据，只需将备份文件 (dump.rdb) 移动到 redis 安装目录并启动服务即可。
